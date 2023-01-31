@@ -1,0 +1,33 @@
+- name: Ensure admin email is defined
+  fail:
+    msg: "Your Headwind Remote administrator email is not defined. Please define existing email address to deploy Headwind Remote in 'email' variable"
+  when: (email is not defined) or (email == None) or (not email)
+
+- name: Ensure hostname is defined
+  fail:
+    msg: "Your Headwind Remote hostname is not defined. Please define existing and working hostname to deploy Headwind Remote in 'hostname' variable. Hostname should be resolved to one of public IP addresses of your server."
+  when: (hostname is not defined) or (hostname == None) or (not hostname)
+
+- name: Try to resolve hostname "{{ hostname }}"
+  set_fact:
+    hostname_ip: "{% if lookup('dig', hostname) | ipaddr %}{{ lookup('dig', hostname) }}{% else %}{% endif %}"
+
+- name: Ensure hostname "{{ hostname }}" has been resolved
+  fail:
+    msg: "Your Headwind Remote hostname '{{ hostname }}' couldn't be resolved to IP address. Please ensure DNS settings of your domain are actual. Keep in mind the DNS settings could be updated for a long time"
+  when: (hostname_ip == None) or (not hostname_ip)
+
+- name: Set "public_ip" to "{{ hostname_ip }}" if it empty in config.yaml
+  set_fact:
+    public_ip: "{{ hostname_ip }}"
+  when: (public_ip is not defined) or (public_ip == None) or (not public_ip)
+
+- name: Process SSL availability
+  set_fact:
+    ssl_enabled: "{% if is_certbot_enabled %}true{% else %}false{% endif %}"
+
+- name: Ensures web-admin dist JS dir exists
+  file: path=./dist/web-admin/dist/js state=directory
+
+- name: Ensures web-admin dist CSS dir exists
+  file: path=./dist/web-admin/dist/css state=directory

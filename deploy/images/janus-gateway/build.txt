@@ -1,0 +1,9 @@
+Build: 
+docker build -t headwindmdm/janus-gateway:0.12.3 -f Dockerfile .
+
+Push:
+docker login
+docker push headwindmdm/janus-gateway:0.12.3
+
+Use:
+Update the image version in deploy/config.build.yaml and run `bash ./install.sh`.

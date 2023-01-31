@@ -1,0 +1,41 @@
+---
+
+## Janus
+# REST API
+api_http: true
+api_http_port: 8088
+
+# REST API (secure)
+api_https: true
+api_https_port: 8089
+
+# Admin REST API (Secure)
+admin_api_https: false
+admin_api_https_port: 7889
+
+# Websockets API (Secure)
+api_wss: true
+api_wss_port: 8989
+
+## Nginx
+is_nginx_enabled: true
+web_http_port: 80
+web_https_port: 443
+
+## RTP
+rtp_port_range: 10000-10500
+
+## SSL and Certbot
+is_certbot_enabled: true
+# Share your email with EFF (Electronic Frontier Foundation, a founding partner of the Let's Encrypt project and the non-profit organization that develops Certbot
+share_email: true
+
+## Networking
+# Public IP is used if Headwind Remote is behind NAT. By default it determined by resolving your hostname via DNS, you could change it in config.yaml
+public_ip: ""
+# If Headwind Remote is installed behind NAT you should enable this flag in config.yaml
+nat: false
+
+## Misc
+# Chars for generated tokens & passwords - without visual collisions (l I 1, o O 0)
+password_chars: "A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,U,V,W,Z,Y,Z,a,b,c,d,e,f,g,h,j,k,m,n,p,q,r,s,t,u,v,w,x,y,z,2,3,4,5,6,7,8,9"

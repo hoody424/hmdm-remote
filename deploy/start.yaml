@@ -1,0 +1,30 @@
+---
+
+- name: Switch to prepare Headwind Remote
+  import_playbook: pre_apuppet.yaml
+
+- name: Start Headwind Remote
+  hosts: localhost
+  connection: local
+  vars_files:
+    - config.build.yaml
+    - config.defaults.yaml
+    - ../config.yaml
+
+  tasks:
+    - set_fact:
+        ssl_enabled: "{% if is_certbot_enabled %}true{% else %}false{% endif %}"
+
+    - name: (Re)Starting Headwind Remote
+      docker_compose:
+        project_src: ../
+        state: present
+        stopped: no
+        restarted: yes
+
+    - name: Welcome!
+      debug:
+        msg:
+          - "To control your mobile devices remotely, install the Headwind Remote Android agent and use the following server URL and secret:"
+          - "{% if ssl_enabled %}https{% else %}http{% endif %}://{{ hostname }}/web-admin/"
+          - "API Secret: {{ janus_api_secret }}"
